@@ -1,16 +1,13 @@
 #include <Watchy.h> //include the Watchy library
-#include "NunitoSans_Bold28pt7b.h"
-#include "NunitoSans_Light28pt7b.h"
+#include "OptimaLTStd24pt7b.h"
+#include "OptimaLTStdBlack34pt7b.h"
 
 class WatchFace : public Watchy
 { //inherit and extend Watchy class
 protected:
-  uint16_t lines;
   void displayLine(const char *s)
   {
     display.print(s);
-    lines += 1;
-    display.setCursor(8, lines * 47 - 5);
   }
 
 public:
@@ -18,8 +15,7 @@ public:
   { //override this method to customize how the watch face looks
     Serial.printf("drawWatchFace currentTime %02d:%02d\n", currentTime.Hour, currentTime.Minute);
     const char *lows[12] = {"twelve", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven"};
-    const char *teens[9] = {"eleven", "twelve", "thir", "four", "fifteen", "sixteen", "seven", "eigh", "nine"};
-    const char *teens2[9] = {nullptr, nullptr, "teen", "teen", nullptr, nullptr, "teen", "teen", "teen"};
+    const char *teens[9] = {"eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
     const char *tens[10] = {"oh", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
 
     //drawbg
@@ -30,12 +26,12 @@ public:
     weatherData wd = Watchy::getWeatherData();
 
     //drawtime
-    lines = 1;
-    display.setCursor(8, lines * 47 - 5);
-    display.setFont(&NunitoSans_Bold28pt7b);
+    display.setFont(&OptimaLTStd_Black34pt7b);
     // hour
+    display.setCursor(0, 70);
     displayLine(lows[currentTime.Hour % 12]);
-    display.setFont(&NunitoSans_Light28pt7b);
+    display.setCursor(0, 120);
+    display.setFont(&OptimaLTStd24pt7b);
     // minutes, can be up to two lines
     // exactly on the hour
     if (currentTime.Minute == 0)
@@ -58,15 +54,12 @@ public:
     if (10 < currentTime.Minute && currentTime.Minute < 20)
     {
       displayLine(teens[currentTime.Minute - 11]);
-      if (teens2[currentTime.Minute - 11] != nullptr)
-      {
-        displayLine(teens2[currentTime.Minute - 11]);
-      }
     }
     // zero to ten or twenty to fifty nine
     else
     {
       displayLine(tens[currentTime.Minute / 10]);
+      display.setCursor(0, 170);
       if (currentTime.Minute % 10 > 0)
       {
         displayLine(lows[currentTime.Minute % 10]);
